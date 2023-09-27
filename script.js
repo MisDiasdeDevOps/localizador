@@ -1,36 +1,24 @@
-function updateDateTime() {
-    const dateElement = document.getElementById('date');
-    const timeElement = document.getElementById('time');
-    
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+function updateClock() {
     const now = new Date();
-    
-    dateElement.textContent = now.toLocaleDateString('es-ES', options);
-    timeElement.textContent = now.toLocaleTimeString('es-ES');
-  }
-  
-  function getLocation() {
-    const locationElement = document.getElementById('location');
-  
+    const clockElement = document.getElementById('clock');
+    clockElement.textContent = now.toLocaleTimeString();
+
+    const dateElement = document.getElementById('date');
+    dateElement.textContent = now.toLocaleDateString();
+
+    // Para obtener la ubicación, puedes utilizar el API de geolocalización del navegador
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        locationElement.textContent = `Latitud: ${latitude}, Longitud: ${longitude}`;
-      }, error => {
-        locationElement.textContent = 'No se pudo obtener la ubicación.';
-      });
-    } else {
-      locationElement.textContent = 'Geolocalización no es compatible en este navegador.';
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const locationElement = document.getElementById('location');
+            const latitude = position.coords.latitude.toFixed(4);
+            const longitude = position.coords.longitude.toFixed(4);
+            locationElement.textContent = `Latitud: ${latitude}, Longitud: ${longitude}`;
+        });
     }
-  }
-  
-  // Actualizar fecha, hora y ubicación cada segundo
-  setInterval(() => {
-    updateDateTime();
-    getLocation();
-  }, 1000);
-  
-  // Inicializar al cargar la página
-  updateDateTime();
-  getLocation();
-  
+}
+
+// Actualizar el reloj cada segundo
+setInterval(updateClock, 1000);
+
+// Llamar a la función una vez para mostrar los valores iniciales
+updateClock();
